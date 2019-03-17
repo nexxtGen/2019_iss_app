@@ -15,6 +15,7 @@ class App extends Component {
 
     },
     distanceBetween: "",
+    speed: "",
     success: false,
     errorMessage: ""
   }
@@ -22,12 +23,15 @@ class App extends Component {
   componentDidMount() {
     this.interval = setInterval(() => {
       this.fetchDataFromApi();
-      if (this.state.nextIssData.timestamp) {
+      if (this.state.nextIssData.timestamp != "") {
         const {
           initialIssData,
-          nextIssData
+          nextIssData,          
         } = this.state;
         this.getDistanceFromLatLonInKm(initialIssData.latitude, initialIssData.longitude, nextIssData.latitude, nextIssData.longitude, this.deg2rad);
+        if (this.state.distanceBetween) {
+          this.calculateVelocity(this.state.distanceBetween, initialIssData.timestamp, nextIssData.timestamp );
+        }
       }
     }, 1000);
   }
@@ -35,6 +39,7 @@ class App extends Component {
   componentWillUnmount() {
     clearInterval(this.interval);
   }
+  
   //Get data from web API
   fetchDataFromApi = () => {
     const url = `http://api.open-notify.org/iss-now.json`;
@@ -64,7 +69,7 @@ class App extends Component {
 
   //Calculate distance between two points using Haversine formula
   getDistanceFromLatLonInKm = (lat1,lon1,lat2,lon2, deg2rad) => {
-    const R = 6371; // Radius of the earth in km
+    const R = 7033; // Radius of the earth in km + 408km ISS height + fix value :)
     const dLat = deg2rad(lat2-lat1);
     const dLon = deg2rad(lon2-lon1); 
     const a = 
@@ -73,7 +78,7 @@ class App extends Component {
       Math.sin(dLon/2) * Math.sin(dLon/2)
       ; 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    const d = parseFloat((R * c).toFixed(1)); // Distance in km
+    const d = parseFloat((R * c).toFixed(4)); // Distance in km
     this.setState({
       distanceBetween: d
     });
@@ -84,12 +89,18 @@ class App extends Component {
     return deg * (Math.PI/180)
   }
 
+  calculateVelocity = (dist, timeStart, timeEnd) => {
+    const result = (dist / (timeEnd - timeStart)).toFixed(2);
+    this.setState( { speed: result });
+  }
+
   render() {
     const {
       initialIssData,
       nextIssData,
       errorMessage,
-      distanceBetween
+      distanceBetween,
+      speed
     } = this.state;
 
     return (
@@ -105,6 +116,7 @@ class App extends Component {
        <p>Lat: {nextIssData.latitude}</p>
        <p>Long: {nextIssData.longitude}</p>
        <h4>Errors: {errorMessage}</h4>
+       <h3>Speed: {speed}km/h</h3>
       </div>
     );
   }
