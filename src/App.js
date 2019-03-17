@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import GoogleMap from './components/googleMap';
 
 class App extends Component {
   state = {
@@ -117,6 +118,12 @@ class App extends Component {
        <p>Long: {nextIssData.longitude}</p>
        <h4>Errors: {errorMessage}</h4>
        <h3>Speed: {speed}km/h</h3>
+       { this.state.nextIssData.latitude != "" ?
+           <GoogleMap
+               markerOneLat={this.state.nextIssData.latitude}
+               markerOneLng={this.state.nextIssData.longitude}
+             />              
+       : <p>Loading..</p>}
       </div>
     );
   }
