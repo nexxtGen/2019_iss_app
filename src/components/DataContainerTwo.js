@@ -28,6 +28,7 @@ class DataContainerTwo extends Component {
                         <BasicInfo
                             speed={ this.props.speed }
                             distance={ this.props.distance }
+                            time= { this.props.time }
                         /> 
                         : 
                         <MoreInfo

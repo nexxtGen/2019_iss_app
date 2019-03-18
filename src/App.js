@@ -3,6 +3,7 @@ import './App.css';
 import GoogleMap from './components/MapContainer';
 import DataContainerOne from './components/DataContainerOne';
 import DataContainerTwo from './components/DataContainerTwo';
+import git from './images/github.png';
 
 class App extends Component {
   state = {
@@ -19,7 +20,7 @@ class App extends Component {
     },
     distanceBetween: "",
     speed: "",
-    success: false,
+    time: "",
     errorMessage: "-",
     pathData: []
   }
@@ -27,16 +28,23 @@ class App extends Component {
   componentDidMount() {
     this.interval = setInterval(() => {
       this.fetchDataFromApi();
-      if (this.state.currentIssData.timestamp != "") {
+      if (this.state.currentIssData.timestamp !== "") {
         const {
           initialIssData,
           currentIssData,
-          pathData
+          //pathData
         } = this.state;
-        this.getDistanceFromLatLonInKm(initialIssData.latitude, initialIssData.longitude, currentIssData.latitude, currentIssData.longitude, this.deg2rad);
+        this.getDistanceFromLatLonInKm(
+          initialIssData.latitude, 
+          initialIssData.longitude, 
+          currentIssData.latitude, 
+          currentIssData.longitude, 
+          this.deg2rad
+          );
         //this.pathData(currentIssData.latitude, currentIssData.longitude, pathData);
         if (this.state.distanceBetween) {
           this.calculateVelocity(this.state.distanceBetween, initialIssData.timestamp, currentIssData.timestamp );
+          this.calculateTime(initialIssData.timestamp, currentIssData.timestamp)
         }
       }
     }, 1000);
@@ -44,7 +52,6 @@ class App extends Component {
 
   componentWillUnmount() {
     clearInterval(this.interval);
-    clearInterval(this.interval2);
   }
   
   //Get data from web API
@@ -81,11 +88,11 @@ class App extends Component {
     const dLon = deg2rad(lon2-lon1); 
     const a = 
       Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
       Math.sin(dLon/2) * Math.sin(dLon/2)
       ; 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    const d = parseFloat((R * c).toFixed(4)); // Distance in km
+    const d = parseFloat((R * c).toFixed(2)); // Distance in km
     this.setState({
       distanceBetween: d
     });
@@ -96,11 +103,13 @@ class App extends Component {
     return deg * (Math.PI/180)
   }
 
+  // Calculate ISS speed in km/h
   calculateVelocity = (dist, timeStart, timeEnd) => {
     const result = (dist / (timeEnd - timeStart)).toFixed(2);
     this.setState( { speed: result });
   }
 
+  // Reset current ISS tracking data
   resetTracking = () => {
     this.setState({
       initialIssData: {
@@ -116,7 +125,7 @@ class App extends Component {
       },
       distanceBetween: "",
       speed: "",
-      success: false,
+      time: "",
       errorMessage: "-"
     })
   }
@@ -130,6 +139,23 @@ class App extends Component {
     });
   }
 
+  // calculate time
+  calculateTime = (start, end) => {
+    const seconds = Number(end- start);
+    //const d = Number(seconds);
+    var hours = Math.floor(seconds / 3600);
+    var mins = Math.floor(seconds % 3600 / 60);
+    var secs = Math.floor(seconds % 3600 % 60);
+
+    var hDisplay = hours > 0 ? hours + (hours === 1 ? " hr, " : " hrs, ") : "";
+    var mDisplay = mins > 0 ? mins + (mins === 1 ? " min, " : " mins, ") : "";
+    var sDisplay = secs > 0 ? secs + (secs === 1 ? " sec" : " secs") : "";
+    const time = hDisplay + mDisplay + sDisplay;
+    this.setState({
+      time: time
+    })
+  }
+
   render() {
     const {
       initialIssData,
@@ -137,25 +163,34 @@ class App extends Component {
       errorMessage,
       distanceBetween,
       speed,
-      pathData
+      time,      
     } = this.state;
 
     return (
       <div className="app">
         <div className="navbar">
-          <p>Errors: { errorMessage }</p>
+          <div className="navbar-container">
+            <div className="navbar-container-git">
+              <a href="https://github.com/nexxtGen/2019_iss_app" target="_blank">
+                <img src={ git } alt="miau" className="miau-github-icon"/>
+              </a>
+            </div>
+            <div className="navbar-container-errors">
+              <p>Errors: { errorMessage }</p>
+            </div>
+          </div>
         </div>        
         <div className="app-container">
           <div className="data-container">
             <div className="data-box-1">
               <DataContainerOne
-                resetTracking={ this.resetTracking }
-                pathData={ pathData }
+                resetTracking={ this.resetTracking }                
                />
             </div>
             <div className="data-box-2">
               <DataContainerTwo
                 speed={ speed }
+                time= { time }
                 distance={ distanceBetween }
                 initialLat={ initialIssData.latitude }
                 initialLng={ initialIssData.longitude }
@@ -171,8 +206,7 @@ class App extends Component {
                     markerOneLng={ initialIssData.longitude }
                     markerTwoLat={ currentIssData.latitude }
                     markerTwoLng={ currentIssData.longitude }
-                    pathData={ pathData }
-
+                    //pathData={ pathData }
                   />              
             : <h2>Loading...</h2>}
           </div>
