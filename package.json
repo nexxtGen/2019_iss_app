@@ -2,13 +2,17 @@
   "name": "2019_iss_app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://nexxtgen.github.io/2019_iss_app/",
   "dependencies": {
+    "gh-pages": "^2.0.1",
     "google-maps-react": "^2.0.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-scripts": "2.1.8"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b master -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
