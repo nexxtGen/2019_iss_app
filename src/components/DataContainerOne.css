@@ -1,0 +1,44 @@
+.data-container-one {    
+    box-sizing: border-box;
+    height: 330px;
+    width: 400px;
+    text-align: center;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 40px;
+}
+
+.image-iss-box {
+    box-sizing: border-box;
+}
+.image-iss-box img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 5px black;
+}
+
+.data-container-one-text {
+    margin-top: 10px;
+    border-top: 1px solid white;
+    color: white;
+}
+
+.data-container-one-text button {
+    width: 140px;
+    height: 40px;
+    background-color: rgb(0, 123, 224);
+    border: 1px solid rgb(62, 146, 255);
+    color: white;
+    border-radius: 7px;
+}
+
+.data-container-one-text button:hover {
+    background-color: rgb(0, 115, 209);
+    cursor: pointer;
+}
+
+.data-container-one-text button:active {
+    background-color: rgb(13, 140, 243);
+}

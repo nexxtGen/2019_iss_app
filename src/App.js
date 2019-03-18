@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import GoogleMap from './components/googleMap';
+import GoogleMap from './components/MapContainer';
+import DataContainerOne from './components/DataContainerOne';
+import DataContainerTwo from './components/DataContainerTwo';
 
 class App extends Component {
   state = {
@@ -105,25 +107,27 @@ class App extends Component {
     } = this.state;
 
     return (
-      <div className="App">
-       <h1>My app</h1>
-       <h5>Distance: {distanceBetween}km</h5>
-       <p>Initial Iss Data</p>
-       <p>Time: {initialIssData.timestamp}</p>
-       <p>Lat: {initialIssData.latitude}</p>
-       <p>Long: {initialIssData.longitude}</p>
-       <p>Current Iss data:</p>       
-       <p>Time: {nextIssData.timestamp}</p>
-       <p>Lat: {nextIssData.latitude}</p>
-       <p>Long: {nextIssData.longitude}</p>
-       <h4>Errors: {errorMessage}</h4>
-       <h3>Speed: {speed}km/h</h3>
-       { this.state.nextIssData.latitude != "" ?
-           <GoogleMap
-               markerOneLat={this.state.nextIssData.latitude}
-               markerOneLng={this.state.nextIssData.longitude}
-             />              
-       : <p>Loading..</p>}
+      <div className="app">
+        <div className="navbar">
+        </div>        
+        <div className="app-container">
+          <div className="data-container">
+            <div className="data-box-1">
+              <DataContainerOne />
+            </div>
+            <div className="data-box-2">
+              <DataContainerTwo />
+            </div>
+          </div>
+          <div className="map-container">
+            { this.state.nextIssData.latitude != "" ?
+                <GoogleMap                    
+                    markerOneLat={this.state.nextIssData.latitude}
+                    markerOneLng={this.state.nextIssData.longitude}
+                  />              
+            : <h2>Loading...</h2>}
+          </div>
+       </div>
       </div>
     );
   }

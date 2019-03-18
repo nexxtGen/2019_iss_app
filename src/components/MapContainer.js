@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper, Polyline, Polygon} from 'google-maps-react';
+import { relative } from 'path';
 
 export class MapContainer extends Component {
     render() {
-        const style = {
-            width: '50%',
-            height: '50%'
-          };
 
         const pathCoordinates = [
             {lat: 25.774, lng: -80.190},
@@ -15,9 +12,10 @@ export class MapContainer extends Component {
         ];
         return (
           <Map 
+            containerStyle={{width: '100%', height: '100%', position: 'absolute', zIndex: '1'}}
             google={this.props.google}
+            style={{width: '100%', height: '100%', position: 'absolute', zIndex: '16'}}
             zoom={4}
-            style={style}
             initialCenter={{
                 lat: 25.774,
                 lng: -80.190
