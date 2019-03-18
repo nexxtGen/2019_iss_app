@@ -11,7 +11,7 @@ class App extends Component {
       latitude: "",
       longitude: ""
     },
-    nextIssData: {
+    currentIssData: {
       timestamp: "",
       latitude: "",
       longitude: "",
@@ -20,20 +20,23 @@ class App extends Component {
     distanceBetween: "",
     speed: "",
     success: false,
-    errorMessage: ""
+    errorMessage: "-",
+    pathData: []
   }
   
   componentDidMount() {
     this.interval = setInterval(() => {
       this.fetchDataFromApi();
-      if (this.state.nextIssData.timestamp != "") {
+      if (this.state.currentIssData.timestamp != "") {
         const {
           initialIssData,
-          nextIssData,          
+          currentIssData,
+          pathData
         } = this.state;
-        this.getDistanceFromLatLonInKm(initialIssData.latitude, initialIssData.longitude, nextIssData.latitude, nextIssData.longitude, this.deg2rad);
+        this.getDistanceFromLatLonInKm(initialIssData.latitude, initialIssData.longitude, currentIssData.latitude, currentIssData.longitude, this.deg2rad);
+        //this.pathData(currentIssData.latitude, currentIssData.longitude, pathData);
         if (this.state.distanceBetween) {
-          this.calculateVelocity(this.state.distanceBetween, initialIssData.timestamp, nextIssData.timestamp );
+          this.calculateVelocity(this.state.distanceBetween, initialIssData.timestamp, currentIssData.timestamp );
         }
       }
     }, 1000);
@@ -41,6 +44,7 @@ class App extends Component {
 
   componentWillUnmount() {
     clearInterval(this.interval);
+    clearInterval(this.interval2);
   }
   
   //Get data from web API
@@ -57,12 +61,12 @@ class App extends Component {
         if (!this.state.initialIssData.timestamp) {
           this.setState({
             initialIssData: issData,            
-            errorMessage: ""
+            errorMessage: "-"
           });
         } else 
           this.setState({
-            nextIssData: issData,
-            errorMessage: ""
+            currentIssData: issData,
+            errorMessage: "-"
           });
       })
       .catch(error => {        
@@ -97,33 +101,78 @@ class App extends Component {
     this.setState( { speed: result });
   }
 
+  resetTracking = () => {
+    this.setState({
+      initialIssData: {
+        timestamp: "",
+        latitude: "",
+        longitude: ""
+      },
+      currentIssData: {
+        timestamp: "",
+        latitude: "",
+        longitude: "",
+  
+      },
+      distanceBetween: "",
+      speed: "",
+      success: false,
+      errorMessage: "-"
+    })
+  }
+
+  // Create path data
+  pathData = (lat, lng, dataState) => {
+    const data = dataState;
+    data.push({lat: parseFloat(lat), lng: parseFloat(lng)});
+    this.setState({
+      pathData: data
+    });
+  }
+
   render() {
     const {
       initialIssData,
-      nextIssData,
+      currentIssData,
       errorMessage,
       distanceBetween,
-      speed
+      speed,
+      pathData
     } = this.state;
 
     return (
       <div className="app">
         <div className="navbar">
+          <p>Errors: { errorMessage }</p>
         </div>        
         <div className="app-container">
           <div className="data-container">
             <div className="data-box-1">
-              <DataContainerOne />
+              <DataContainerOne
+                resetTracking={ this.resetTracking }
+                pathData={ pathData }
+               />
             </div>
             <div className="data-box-2">
-              <DataContainerTwo />
+              <DataContainerTwo
+                speed={ speed }
+                distance={ distanceBetween }
+                initialLat={ initialIssData.latitude }
+                initialLng={ initialIssData.longitude }
+                currLat={ currentIssData.latitude }
+                currLng={ currentIssData.longitude }
+               />
             </div>
           </div>
           <div className="map-container">
-            { this.state.nextIssData.latitude != "" ?
+            { this.state.currentIssData.latitude !== "" ?
                 <GoogleMap                    
-                    markerOneLat={this.state.nextIssData.latitude}
-                    markerOneLng={this.state.nextIssData.longitude}
+                    markerOneLat={ initialIssData.latitude }
+                    markerOneLng={ initialIssData.longitude }
+                    markerTwoLat={ currentIssData.latitude }
+                    markerTwoLng={ currentIssData.longitude }
+                    pathData={ pathData }
+
                   />              
             : <h2>Loading...</h2>}
           </div>

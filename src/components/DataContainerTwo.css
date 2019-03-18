@@ -1,6 +1,8 @@
 .data-container-two {
     height: 330px;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .buttons-conatiner {
@@ -29,4 +31,10 @@
 .information-button:hover{    
     background: rgba(0, 0, 0, 0.5); 
     cursor: pointer;   
+}
+
+.all-info-container {
+    width: 100%;
+    color: white;
+    padding: 30px;
 }

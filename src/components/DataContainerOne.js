@@ -9,7 +9,7 @@ const DataContainerOne = (props) => (
         </div>
         <div className="data-container-one-text">
             <h2>ISS APP</h2>
-            <button>Reset Tracking</button>
+            <button onClick={props.resetTracking}>Reset Tracking</button>            
         </div>
     </div>
 );

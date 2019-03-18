@@ -1,56 +1,57 @@
 import React, { Component } from 'react';
-import {Map, InfoWindow, Marker, GoogleApiWrapper, Polyline, Polygon} from 'google-maps-react';
-import { relative } from 'path';
+import { Map, InfoWindow, Marker, GoogleApiWrapper, Polyline } from 'google-maps-react';
+import path from './path.js';
 
 export class MapContainer extends Component {
-    render() {
 
-        const pathCoordinates = [
-            {lat: 25.774, lng: -80.190},
-            {lat: 18.466, lng: -66.118},
-            {lat: 16.466, lng: -60.118}
-        ];
+    render() {
+        const pathCoords = this.props.pathData;
+        let pathCoords2 = this.props.pathData;
+        console.log("path coords", pathCoords);
         return (
           <Map 
             containerStyle={{width: '100%', height: '100%', position: 'absolute', zIndex: '1'}}
-            google={this.props.google}
+            google={window.google}
             style={{width: '100%', height: '100%', position: 'absolute', zIndex: '16'}}
-            zoom={4}
+            zoom={5}
             initialCenter={{
-                lat: 25.774,
-                lng: -80.190
-              }}
-            center={{
-                lat: 25.774,
-                lng: -80.190
-              }}              
+                lat: this.props.markerOneLat,
+                lng: this.props.markerOneLng
+              }}                         
             >
-            <Polyline 
-                path={pathCoordinates} 
-                options={{ 
-                strokeColor: '#00ffff',
-                strokeOpacity: 1,
-                strokeWeight: 2,
-                icons: [{ 
-                    icon: "hello",
-                    offset: '0',
-                    repeat: '10px'
+
+            <Polyline   
+                geodesic={true}                
+                options={{
+                    path: path,
+                    strokeColor: '#00ffff',
+                    strokeOpacity: 1,
+                    strokeWeight: 2,
+                    icons: [{
+                        offset: '0',
+                        repeat: '10px'
                     }],
                 }}
             />
 
-            <Marker 
-                title={'ISS station'}
-                name={'Current location'}
-                position={{lat: this.props.markerOneLat, lng: this.props.markerOneLng}}
-             />
+            <Marker
+                title={`Initial ${ this.props.markerOneLat} , ${ this.props.markerOneLng } ISS location`}
+                name={'INITIAL'}
+                position={{lat: this.props.markerOneLat, lng: this.props.markerOneLng}}                
+            />
+            
+            <Marker
+                title={`Current ${ this.props.markerTwoLat} , ${ this.props.markerTwoLng } ISS location`}
+                name={'CURRENT'}
+                position={{lat: this.props.markerTwoLat, lng: this.props.markerTwoLng}}
+                icon={{
+                    url: "https://cdn1.iconfinder.com/data/icons/computer-and-internet/512/satellite_space_communication_broadcasting-512.png",
+                    anchor: new window.google.maps.Point(14,14),
+                    scaledSize: new window.google.maps.Size(40,40)
+                }}
+            />
 
-            <Marker 
-                title={'Initial position ISS station'}
-                name={'initial location'}
-                position={{lat: 1.0365, lng: 155.6882}}
-             />
-     
+
             <InfoWindow>
                 <div>
                   <h1>test</h1>
@@ -62,5 +63,5 @@ export class MapContainer extends Component {
 }
 
 export default GoogleApiWrapper({
-    apiKey: ("AIzaSyAyesbQMyKVVbBgKVi2g6VX7mop2z96jBo")
+    apiKey: ("AIzaSyAyesbQMyKVVbBgKVi2g6VX7mop2z96jBo"),    
   })(MapContainer)

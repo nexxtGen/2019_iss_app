@@ -1,0 +1,20 @@
+.basic-info-container {
+    box-sizing: border-box;
+    width: 300px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.info-column-one {
+    width: 50%;
+    border-right: 1px solid white;
+    margin-right: 30px;
+}
+
+.info-column-one p {
+    font-weight: 500;
+}
+.info-column-two {
+    width: 50%;
+}
