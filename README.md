@@ -1,3 +1,18 @@
+ISS tracker app created for Intive Academy program. Front-end group. 
+
+running:
+
+clone repository
+
+npm install
+
+npm run start
+
+open: http://localhost3000
+
+Thanks for watching. K. Sz.
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
