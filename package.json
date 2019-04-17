@@ -4,11 +4,14 @@
   "private": true,
   "homepage": "https://nexxtgen.github.io/2019_iss_app/",
   "dependencies": {
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.12.1",
     "gh-pages": "^2.0.1",
     "google-maps-react": "^2.0.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "react-test-renderer": "^16.8.6"
   },
   "scripts": {
     "predeploy": "npm run build",
