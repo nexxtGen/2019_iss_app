@@ -10,11 +10,11 @@ describe("DataContainerOne", () => {
   describe("Reset button", () => {
     it("Should call reset track on click", () => {
       const mockedResetTracking = jest.fn(); //Metoda do mockowania, symuluje callback przekazany w propsach.
-      const playerComponent = shallow(
+      const wrapperDataContainerOne = shallow(
         <DataContainerOne resetTracking={mockedResetTracking} />
       );
 
-      const resetTrackingBtn = playerComponent.find(
+      const resetTrackingBtn = wrapperDataContainerOne.find(
         'button[aria-label="Reset"]'
       );
 
